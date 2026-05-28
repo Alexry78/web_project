@@ -12,7 +12,6 @@
         </div>
     </section>
 
-
     <section class="py-5">
         <div class="container">
             <h2 class="text-center mb-4">Популярные фильмы</h2>
@@ -23,7 +22,7 @@
                         <img src="{% if movie.image %}{{ movie.image.url }}{% else %}https://placehold.co/300x200{% endif %}" class="card-img-top" alt="{{ movie.title }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ movie.title }}</h5>
-                            <p class="card-text">{{ movie.description|truncatewords:20 }}</p>
+                            <p class="card-text">{{ movie.description|truncatewords:15 }}</p>
                             <p><strong>Режиссёр:</strong> {{ movie.director }}<br>
                             <strong>Год:</strong> {{ movie.release_year }}<br>
                             <strong>Рейтинг:</strong> {{ movie.rating }}</p>
@@ -32,7 +31,7 @@
                     </div>
                 </div>
                 {% empty %}
-                <p class="text-center">Нет фильмов для отображения.</p>
+                <p class="text-center">Нет фильмов для отображения. Зайдите позже!</p>
                 {% endfor %}
             </div>
         </div>
