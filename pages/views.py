@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Movie
-from .forms import FeedbackForm
+from .forms import FeedbackForm, MovieForm   
 
 def index(request):
     movies = Movie.objects.all()
@@ -31,3 +31,24 @@ def contact(request):
         form = FeedbackForm()
     
     return render(request, 'pages/contact.html', {'form': form})
+
+def movie_create(request):
+    if request.method == 'POST':
+        form = MovieForm(request.POST, request.FILES)
+        if form.is_valid():
+            movie = form.save()
+            return redirect('movie_detail', pk=movie.pk)
+    else:
+        form = MovieForm()
+    return render(request, 'pages/movie_form.html', {'form': form, 'title': 'Добавить фильм'})
+
+def movie_update(request, pk):
+    movie = get_object_or_404(Movie, pk=pk)
+    if request.method == 'POST':
+        form = MovieForm(request.POST, request.FILES, instance=movie)
+        if form.is_valid():
+            form.save()
+            return redirect('movie_detail', pk=movie.pk)
+    else:
+        form = MovieForm(instance=movie)
+    return render(request, 'pages/movie_form.html', {'form': form, 'title': 'Редактировать фильм'})

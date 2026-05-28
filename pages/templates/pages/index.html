@@ -4,12 +4,17 @@
 
 {% block content %}
 
+    <div class="container mt-3 mb-3">
+        <a href="{% url 'movie_create' %}" class="btn btn-primary">➕ Добавить фильм</a>
+    </div>
+
     <section class="hero-soft-blue text-center py-5">
         <div class="container">
             <h1 class="display-4">Добро пожаловать в мир кино!</h1>
             <p class="lead">Смотрите трейлеры, оценивайте фильмы, делитесь впечатлениями.</p>
             <a href="#" class="btn btn-primary btn-lg">Начать</a>
         </div>
+        
     </section>
 
     <section class="py-5">
