@@ -1,7 +1,7 @@
+from .models import Movie, Tag
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .models import Movie
 from .forms import FeedbackForm, MovieForm
 
 def index(request):
@@ -67,3 +67,8 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
+
+def movies_by_tag(request, tag_id):
+    tag = get_object_or_404(Tag, pk=tag_id)
+    movies = tag.movies.all()
+    return render(request, 'pages/movies_by_tag.html', {'tag': tag, 'movies': movies})

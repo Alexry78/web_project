@@ -2,8 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from pages.views import index, about, movie_detail, contact, movie_create, movie_update, register
-
+from pages.views import index, about, movie_detail, contact, movie_create, movie_update, register, movies_by_tag
 urlpatterns = [
     path('', index, name='home'),
     path('about/', about, name='about'),
@@ -14,6 +13,7 @@ urlpatterns = [
     path('accounts/register/', register, name='register'),      
     path('accounts/', include('django.contrib.auth.urls')),    
     path('admin/', admin.site.urls),
+    path('tag/<int:tag_id>/', movies_by_tag, name='movies_by_tag'),
 ]
 
 if settings.DEBUG:

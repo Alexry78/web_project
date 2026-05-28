@@ -1,5 +1,5 @@
 from django import forms
-from .models import Movie
+from .models import Movie, Tag 
 
 class MovieForm(forms.ModelForm):
     class Meta:
@@ -13,6 +13,7 @@ class MovieForm(forms.ModelForm):
             'rating': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
             'is_showing': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'tags': forms.SelectMultiple(attrs={'class': 'form-control'}),
         }
         labels = {
             'title': 'Название фильма',

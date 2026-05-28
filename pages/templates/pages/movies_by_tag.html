@@ -1,0 +1,25 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}Фильмы с тегом «{{ tag.name }}»{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1>Фильмы с тегом «{{ tag.name }}»</h1>
+    <div class="row">
+        {% for movie in movies %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="{% if movie.image %}{{ movie.image.url }}{% else %}https://placehold.co/300x200{% endif %}" class="card-img-top" alt="{{ movie.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ movie.title }}</h5>
+                    <p class="card-text">{{ movie.description|truncatewords:15 }}</p>
+                    <a href="{% url 'movie_detail' movie.pk %}" class="btn btn-primary">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Нет фильмов с таким тегом.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

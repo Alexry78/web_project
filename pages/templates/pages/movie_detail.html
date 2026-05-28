@@ -17,11 +17,21 @@
             <p><strong>Режиссёр:</strong> {{ movie.director }}</p>
             <p><strong>Год выпуска:</strong> {{ movie.release_year }}</p>
             <p><strong>Рейтинг:</strong> {{ movie.rating }}</p>
+            <p><strong>Теги:</strong>
+                {% for tag in movie.tags.all %}
+                    <a href="{% url 'movies_by_tag' tag.id %}" class="badge bg-secondary text-decoration-none">{{ tag.name }}</a>
+                {% empty %}
+                    <span class="text-muted">нет тегов</span>
+                {% endfor %}
+            </p>
             <p><strong>В прокате:</strong> {% if movie.is_showing %}Да{% else %}Нет{% endif %}</p>
             <hr>
             <h4>Описание:</h4>
             <p>{{ movie.description|linebreaks }}</p>
             <a href="{% url 'home' %}" class="btn btn-secondary">← Назад к списку</a>
+            {% if user.is_authenticated and movie.author == user %}
+                <a href="{% url 'movie_update' movie.pk %}" class="btn btn-warning">✏️ Редактировать</a>
+            {% endif %}
         </div>
     </div>
 </div>
