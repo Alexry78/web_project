@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.urls import path
-from pages.views import index, about   
+from pages.views import index, about, movie_detail   
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('', index, name='home'),
-    path('about/', about, name='about'),  
+    path('about/', about, name='about'),
+    path('movie/<int:pk>/', movie_detail, name='movie_detail'),   
     path('admin/', admin.site.urls),
 ]
 

@@ -26,7 +26,7 @@
                             <p><strong>Режиссёр:</strong> {{ movie.director }}<br>
                             <strong>Год:</strong> {{ movie.release_year }}<br>
                             <strong>Рейтинг:</strong> {{ movie.rating }}</p>
-                            <a href="#" class="btn btn-outline-primary">Подробнее</a>
+                            <a href="{% url 'movie_detail' movie.pk %}" class="btn btn-outline-primary">Подробнее</a>
                         </div>
                     </div>
                 </div>
