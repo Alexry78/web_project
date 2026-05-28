@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from .forms import FeedbackForm, MovieForm
+from django.contrib import messages
+from .forms import CommentForm
 
 def index(request):
     movies = Movie.objects.all()
@@ -72,3 +74,24 @@ def movies_by_tag(request, tag_id):
     tag = get_object_or_404(Tag, pk=tag_id)
     movies = tag.movies.all()
     return render(request, 'pages/movies_by_tag.html', {'tag': tag, 'movies': movies})
+
+@login_required
+def add_comment(request, pk):
+    movie = get_object_or_404(Movie, pk=pk)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.movie = movie
+            comment.author = request.user
+            comment.save()
+            messages.success(request, 'Комментарий добавлен!')
+        else:
+            messages.error(request, 'Ошибка при добавлении комментария.')
+    return redirect('movie_detail', pk=pk)
+    from .forms import CommentForm
+
+def movie_detail(request, pk):
+    movie = get_object_or_404(Movie, pk=pk)
+    comment_form = CommentForm()
+    return render(request, 'pages/movie_detail.html', {'movie': movie, 'comment_form': comment_form})

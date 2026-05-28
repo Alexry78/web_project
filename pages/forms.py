@@ -1,5 +1,6 @@
 from django import forms
 from .models import Movie, Tag 
+from .models import Comment
 
 class MovieForm(forms.ModelForm):
     class Meta:
@@ -39,3 +40,11 @@ class FeedbackForm(forms.Form):
         label='Сообщение',
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5})
     )
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
