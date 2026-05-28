@@ -1,0 +1,40 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+
+    <section class="hero-soft-blue text-center py-5">
+        <div class="container">
+            <h1 class="display-4">Добро пожаловать в мир кино!</h1>
+            <p class="lead">Смотрите трейлеры, оценивайте фильмы, делитесь впечатлениями.</p>
+            <a href="#" class="btn btn-primary btn-lg">Начать</a>
+        </div>
+    </section>
+
+
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Популярные фильмы</h2>
+            <div class="row">
+                {% for movie in movies %}
+                <div class="col-12 col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="{% if movie.image %}{{ movie.image.url }}{% else %}https://placehold.co/300x200{% endif %}" class="card-img-top" alt="{{ movie.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ movie.title }}</h5>
+                            <p class="card-text">{{ movie.description|truncatewords:20 }}</p>
+                            <p><strong>Режиссёр:</strong> {{ movie.director }}<br>
+                            <strong>Год:</strong> {{ movie.release_year }}<br>
+                            <strong>Рейтинг:</strong> {{ movie.rating }}</p>
+                            <a href="#" class="btn btn-outline-primary">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-center">Нет фильмов для отображения.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

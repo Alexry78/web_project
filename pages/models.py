@@ -8,6 +8,7 @@ class Movie(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=1, verbose_name="Рейтинг", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
     is_showing = models.BooleanField(default=True, verbose_name="Сейчас в прокате")
+    image = models.ImageField(upload_to='movies/', verbose_name="Постер", blank=True, null=True)  # ← убрать пробел
 
     def __str__(self):
         return self.title
