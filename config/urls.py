@@ -1,8 +1,8 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from pages.views import index, about, movie_detail, contact, movie_create, movie_update
+from pages.views import index, about, movie_detail, contact, movie_create, movie_update, register
 
 urlpatterns = [
     path('', index, name='home'),
@@ -11,6 +11,8 @@ urlpatterns = [
     path('contact/', contact, name='contact'),
     path('movie/create/', movie_create, name='movie_create'),
     path('movie/<int:pk>/edit/', movie_update, name='movie_update'),
+    path('accounts/register/', register, name='register'),      
+    path('accounts/', include('django.contrib.auth.urls')),    
     path('admin/', admin.site.urls),
 ]
 

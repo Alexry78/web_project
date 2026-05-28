@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from .models import Movie
-from .forms import FeedbackForm, MovieForm   
+from .forms import FeedbackForm, MovieForm
 
 def index(request):
     movies = Movie.objects.all()
-    context = {
-        'movies': movies
-    }
+    context = {'movies': movies}
     return render(request, 'pages/index.html', context)
 
 def movie_detail(request, pk):
@@ -29,21 +29,26 @@ def contact(request):
             return redirect('home')
     else:
         form = FeedbackForm()
-    
     return render(request, 'pages/contact.html', {'form': form})
 
+@login_required
 def movie_create(request):
     if request.method == 'POST':
         form = MovieForm(request.POST, request.FILES)
         if form.is_valid():
-            movie = form.save()
+            movie = form.save(commit=False)
+            movie.author = request.user
+            movie.save()
             return redirect('movie_detail', pk=movie.pk)
     else:
         form = MovieForm()
     return render(request, 'pages/movie_form.html', {'form': form, 'title': 'Добавить фильм'})
 
+@login_required
 def movie_update(request, pk):
     movie = get_object_or_404(Movie, pk=pk)
+    if movie.author != request.user:
+        return redirect('home')  
     if request.method == 'POST':
         form = MovieForm(request.POST, request.FILES, instance=movie)
         if form.is_valid():
@@ -52,3 +57,13 @@ def movie_update(request, pk):
     else:
         form = MovieForm(instance=movie)
     return render(request, 'pages/movie_form.html', {'form': form, 'title': 'Редактировать фильм'})
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
