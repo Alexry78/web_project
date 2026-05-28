@@ -1,10 +1,12 @@
-from .models import Movie, Tag
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .forms import FeedbackForm, MovieForm
+from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import CommentForm
+from .models import Movie, Tag
+from .forms import MovieForm, CommentForm
 
 def index(request):
     movies = Movie.objects.all()
@@ -91,7 +93,50 @@ def add_comment(request, pk):
     return redirect('movie_detail', pk=pk)
     from .forms import CommentForm
 
-def movie_detail(request, pk):
-    movie = get_object_or_404(Movie, pk=pk)
-    comment_form = CommentForm()
-    return render(request, 'pages/movie_detail.html', {'movie': movie, 'comment_form': comment_form})
+class HomeView(ListView):
+    model = Movie
+    template_name = 'pages/index.html'
+    context_object_name = 'movies'
+    ordering = ['-created_at']
+
+# Детальная страница
+class MovieDetailView(DetailView):
+    model = Movie
+    template_name = 'pages/movie_detail.html'
+    context_object_name = 'movie'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        return context
+
+class MovieCreateView(LoginRequiredMixin, CreateView):
+    model = Movie
+    form_class = MovieForm
+    template_name = 'pages/movie_form.html'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+class MovieUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Movie
+    form_class = MovieForm
+    template_name = 'pages/movie_form.html'
+
+    def test_func(self):
+        movie = self.get_object()
+        return self.request.user == movie.author
+
+    def get_success_url(self):
+        return reverse_lazy('movie_detail', kwargs={'pk': self.object.pk})
+
+class MovieDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Movie
+    template_name = 'pages/movie_confirm_delete.html'
+    success_url = reverse_lazy('home')
+
+    def test_func(self):
+        movie = self.get_object()
+        return self.request.user == movie.author

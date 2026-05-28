@@ -3,21 +3,22 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from pages.views import (
-    index, about, movie_detail, contact, movie_create, movie_update,
-    register, movies_by_tag, add_comment
+    HomeView, MovieDetailView, MovieCreateView, MovieUpdateView,
+    MovieDeleteView, about, contact, register, movies_by_tag, add_comment
 )
 
 urlpatterns = [
-    path('', index, name='home'),
+    path('', HomeView.as_view(), name='home'),
     path('about/', about, name='about'),
-    path('movie/<int:pk>/', movie_detail, name='movie_detail'),
     path('contact/', contact, name='contact'),
-    path('movie/create/', movie_create, name='movie_create'),
-    path('movie/<int:pk>/edit/', movie_update, name='movie_update'),
+    path('movie/<int:pk>/', MovieDetailView.as_view(), name='movie_detail'),
+    path('movie/create/', MovieCreateView.as_view(), name='movie_create'),
+    path('movie/<int:pk>/edit/', MovieUpdateView.as_view(), name='movie_update'),
+    path('movie/<int:pk>/delete/', MovieDeleteView.as_view(), name='movie_delete'),
+    path('movie/<int:pk>/comment/', add_comment, name='add_comment'),
+    path('tag/<int:tag_id>/', movies_by_tag, name='movies_by_tag'),
     path('accounts/register/', register, name='register'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('tag/<int:tag_id>/', movies_by_tag, name='movies_by_tag'),
-    path('movie/<int:pk>/comment/', add_comment, name='add_comment'),
     path('admin/', admin.site.urls),
 ]
 
